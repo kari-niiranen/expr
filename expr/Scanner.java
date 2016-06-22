@@ -103,7 +103,7 @@ class Scanner {
 	    }
 	    tokens.addElement(new Token(s.charAt(i), 0, s, i, i+1));
             return i+1;
-        } else if (Character.isLetter(s.charAt(i))) {
+        } else if (Character.isLetter(s.charAt(i)) || '$' == s.charAt(i) || '_' == s.charAt(i)) {
             return scanSymbol(i);
         } else if (Character.isDigit(s.charAt(i)) || '.' == s.charAt(i)) {
             return scanNumber(i);
@@ -116,7 +116,7 @@ class Scanner {
     private int scanSymbol(int i) {
 	int from = i;
         while (i < s.length() 
-	       && (Character.isLetter(s.charAt(i))
+	       && (Character.isLetter(s.charAt(i)) || '$' == s.charAt(i) || '_' == s.charAt(i)
 		   || Character.isDigit(s.charAt(i))))
             ++i;
 	tokens.addElement(new Token(Token.TT_WORD, 0, s, from, i));
@@ -131,6 +131,8 @@ class Scanner {
         for (; i < s.length(); ++i)
 	    if ('.' != s.charAt(i)
 		&& !Character.isDigit(s.charAt(i))
+		&& '$' != s.charAt(i)
+		&& '_' != s.charAt(i)
 		&& !Character.isLetter(s.charAt(i)))
                 break;
 

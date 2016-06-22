@@ -116,3 +116,8 @@ Contact
 
 See the file [COPYING](COPYING) for copyright info.
 Send questions and bug reports to Darius Bacon <darius@wry.me>.
+
+Modifications
+============
+
+Added support for variable names with underscores and dollar signs in them.
