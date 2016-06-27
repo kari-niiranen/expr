@@ -61,6 +61,9 @@ public class Parser {
     /** Set of Variable's that are allowed to appear in input expressions. 
      * If null, any variable is allowed. */
     private Hashtable allowedVariables = null;
+    
+    /** Set of Variables that are allowed within the scope of this parser */
+    private Hashtable variableScopeTable = null;
 
     /** Adjust the set of allowed variables: create it (if not yet
      * existent) and add optVariable (if it's nonnull).  If the
@@ -73,8 +76,13 @@ public class Parser {
 	    allowedVariables = new Hashtable();
 	    allowedVariables.put(pi, pi);
 	}
-	if (null != optVariable)
+        if (null == variableScopeTable) {
+            variableScopeTable = new Hashtable();
+        }
+	if (null != optVariable) {
 	    allowedVariables.put(optVariable, optVariable);
+            variableScopeTable.put(optVariable.getName(), optVariable);
+        }
     }
 
     Scanner tokens = null;
@@ -213,7 +221,12 @@ public class Parser {
 		return Expr.makeIfThenElse(test, consequent, alternative);
 	    }
 
-	    Expr var = Variable.make(token.sval);
+	    Expr var;
+            if (null != variableScopeTable && null != variableScopeTable.get(token.sval)) {
+                var = (Variable) variableScopeTable.get(token.sval);
+            } else {
+                var = Variable.make(token.sval);
+            }
 	    if (null != allowedVariables && null == allowedVariables.get(var))
 		throw error("Unknown variable",
 			    SyntaxException.UNKNOWN_VARIABLE, null);
