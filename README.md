@@ -120,4 +120,25 @@ Send questions and bug reports to Darius Bacon <darius@wry.me>.
 Modifications
 ============
 
-Added support for variable names with underscores and dollar signs in them.
+- Added support for variable names with underscores and dollar signs in them.
+- Added ln() as an alias for log().
+- Added a Parser specific variable scope.
+
+Variable scopes
+================
+When creating a new variable using the `Variable var = Variable.make("variable")` 
+method, the variable is added to the global scope. As this can be undesirable in
+some cases, parser specific scopes were added. For a variable to be added to the
+parser specific scope, it must be allowed for the parser. Note that the global
+variables must be allowed in the parser as well if they are used in the expression.
+
+Example on creating a scope specific variable:
+```java
+Parser parser = new Parser();
+Variable var = new Variable("variable");
+parser.allow(var);
+```
+The above example will create a variable called _variable_ in the scope of the
+Parser _parser_. Note that the variable is **not** in the global scope. Scope
+specific variables are preferred over the global variables, if there are variables
+with the same name.
